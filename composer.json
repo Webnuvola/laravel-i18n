@@ -1,0 +1,44 @@
+{
+    "name": "webnuvola/laravel-i18n",
+    "description": "Laravel internationalization package",
+    "keywords": [
+        "laravel",
+        "i18n",
+        "internationalization",
+        "localization",
+        "language-selector",
+        "multi-language",
+        "language"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabio Cagliero",
+            "email": "caglierofabio@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/contracts": "5.5.*",
+        "illuminate/routing": "5.5.*",
+        "illuminate/support": "5.5.*",
+        "illuminate/translation": "5.5.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webnuvola\\Laravel\\I18n\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webnuvola\\Laravel\\I18n\\I18nServiceProvider"
+            ],
+            "aliases": {
+                "I18nRoute": "Webnuvola\\Laravel\\I18n\\Facades\\I18nRoute"
+            }
+        }
+    }
+}
