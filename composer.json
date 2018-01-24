@@ -4,11 +4,10 @@
     "keywords": [
         "laravel",
         "i18n",
+        "php",
+        "translation",
         "internationalization",
-        "localization",
-        "language-selector",
-        "multi-language",
-        "language"
+        "localization"
     ],
     "license": "MIT",
     "authors": [
@@ -37,6 +36,7 @@
                 "Webnuvola\\Laravel\\I18n\\I18nServiceProvider"
             ],
             "aliases": {
+                "I18n": "Webnuvola\\Laravel\\I18n\\Facades\\I18n",
                 "I18nRoute": "Webnuvola\\Laravel\\I18n\\Facades\\I18nRoute"
             }
         }
