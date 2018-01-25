@@ -4,6 +4,7 @@ namespace Webnuvola\Laravel\I18n;
 
 use Illuminate\Support\ServiceProvider;
 use Webnuvola\Laravel\I18n\Routing\Router;
+use Illuminate\View\Compilers\BladeCompiler;
 use Webnuvola\Laravel\I18n\Mixins\RouteMixin;
 use Webnuvola\Laravel\I18n\Routing\UrlGenerator;
 use Illuminate\Routing\Route as IlluminateRoute;
@@ -44,6 +45,8 @@ class I18nServiceProvider extends ServiceProvider
         $this->registerRouter();
 
         $this->registerUrlGenerator();
+
+        $this->registerBladeExtensions();
     }
 
     /**
@@ -116,5 +119,39 @@ class I18nServiceProvider extends ServiceProvider
         return function ($app, $request) {
             $app['url']->setRequest($request);
         };
+    }
+
+    /**
+     * Register blade extensions.
+     *
+     * @return void
+     */
+    protected function registerBladeExtensions()
+    {
+        $this->app->afterResolving('blade.compiler', function (BladeCompiler $bladeCompiler) {
+            $bladeCompiler->if('ifregion', function ($region) {
+                return $this->app['i18n']->getRegion() === $region;
+            });
+
+            $bladeCompiler->if('ifnotregion', function ($region) {
+                return $this->app['i18n']->getRegion() !== $region;
+            });
+
+            $bladeCompiler->if('iflanguage', function ($language) {
+                return $this->app['i18n']->getLanguage() === $language;
+            });
+
+            $bladeCompiler->if('ifnotlanguage', function ($language) {
+                return $this->app['i18n']->getLanguage() !== $language;
+            });
+
+            $bladeCompiler->if('ifcountry', function ($country) {
+                return $this->app['i18n']->getCountry() === $country;
+            });
+
+            $bladeCompiler->if('ifnotcountry', function ($country) {
+                return $this->app['i18n']->getCountry() !== $country;
+            });
+        });
     }
 }

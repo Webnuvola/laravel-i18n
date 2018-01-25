@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to `laravel-i18n` will be documented in this file.
 
+## 0.1.2 - 2018-01-25
+* Add `ifregion`, `ifnotregion`, `iflanguage`, `ifnotlanguage`, `ifcountry`, `ifnotcountry` blade extensions. 
+
 ## 0.1.1 - 2018-01-24
 * Add `I18n` facade
 * Update `composer.json` keywords

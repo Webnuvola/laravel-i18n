@@ -20,7 +20,8 @@
         "illuminate/contracts": "5.5.*",
         "illuminate/routing": "5.5.*",
         "illuminate/support": "5.5.*",
-        "illuminate/translation": "5.5.*"
+        "illuminate/translation": "5.5.*",
+        "illuminate/view": "5.5.*"
     },
     "autoload": {
         "psr-4": {
