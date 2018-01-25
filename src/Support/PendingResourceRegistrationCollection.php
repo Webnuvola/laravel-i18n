@@ -19,7 +19,7 @@ class PendingResourceRegistrationCollection implements Countable
     /**
      * Add a route to the collection
      *
-     * @param \Illuminate\Routing\PendingResourceRegistration $pending
+     * @param  \Illuminate\Routing\PendingResourceRegistration $pending
      * @return \Webnuvola\Laravel\I18n\Support\PendingResourceRegistrationCollection
      */
     public function push(PendingResourceRegistration $pending)
@@ -42,8 +42,9 @@ class PendingResourceRegistrationCollection implements Countable
     /**
      * Call method on every route in the collection.
      *
-     * @param string $method
-     * @param array $arguments
+     * @param  string $method
+     * @param  array $arguments
+     * @return \Webnuvola\Laravel\I18n\Support\PendingResourceRegistrationCollection
      *
      * @throws Exception
      * @throws BadMethodCallException
@@ -61,5 +62,7 @@ class PendingResourceRegistrationCollection implements Countable
         foreach ($this->pending as $route) {
             call_user_func_array([$route, $method], $arguments);
         }
+
+        return $this;
     }
 }

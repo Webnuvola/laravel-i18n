@@ -71,6 +71,7 @@ class RouteCollection implements Countable, IteratorAggregate
      *
      * @param string $method
      * @param array $arguments
+     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
      *
      * @throws Exception
      * @throws BadMethodCallException
@@ -88,5 +89,7 @@ class RouteCollection implements Countable, IteratorAggregate
         foreach ($this->routes as $route) {
             call_user_func_array([$route, $method], $arguments);
         }
+
+        return $this;
     }
 }
