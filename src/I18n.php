@@ -181,4 +181,14 @@ class I18n
 
         return $prefix . ltrim($uri, '/');
     }
+
+    /**
+     * Returns true if the configuration file has at least 1 region.
+     *
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        return !!$this->getRegions();
+    }
 }

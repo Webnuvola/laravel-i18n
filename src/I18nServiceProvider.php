@@ -29,6 +29,10 @@ class I18nServiceProvider extends ServiceProvider
         ], 'config');
 
         IlluminateRoute::mixin(new RouteMixin);
+
+        if ($this->app['i18n']->isConfigured()) {
+            $this->app->setLocale($this->app['i18n']->getLanguage());
+        }
     }
 
     /**

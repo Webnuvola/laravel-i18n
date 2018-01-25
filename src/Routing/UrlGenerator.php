@@ -61,8 +61,8 @@ class UrlGenerator extends IlluminateUrlGenerator
      */
     public function route($name, $parameters = [], $absolute = true)
     {
-        if ($regionUriPath = $this->i18n->getRegion()) {
-            $name = "{$regionUriPath}.{$name}";
+        if (is_null($route = $this->routes->getByName($name))) {
+            $name = $this->i18n->getRegion() . ".{$name}";
         }
 
         return parent::route($name, $parameters, $absolute);
