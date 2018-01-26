@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to `laravel-i18n` will be documented in this file.
 
+## 0.1.5 - 2018-01-26
+* I18n: manually set the current region with `setRegion($region)`
+* I18n: added `getDefaultRegion()` method
+
 ## 0.1.4 - 2018-01-25
 * Helper `route()` now returns also routes non internationalized
 * The application locale is now set during `I18nServiceProvider` boot

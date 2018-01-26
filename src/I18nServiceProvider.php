@@ -28,11 +28,9 @@ class I18nServiceProvider extends ServiceProvider
             $this->configFile => config_path('i18n.php'),
         ], 'config');
 
-        IlluminateRoute::mixin(new RouteMixin);
+        $this->app['i18n']->init();
 
-        if ($this->app['i18n']->isConfigured()) {
-            $this->app->setLocale($this->app['i18n']->getLanguage());
-        }
+        IlluminateRoute::mixin(new RouteMixin);
     }
 
     /**
