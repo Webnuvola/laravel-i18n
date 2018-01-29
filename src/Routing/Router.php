@@ -4,7 +4,6 @@ namespace Webnuvola\Laravel\I18n\Routing;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Router as IlluminateRouter;
-use Webnuvola\Laravel\I18n\Support\RouteCollection;
 use Webnuvola\Laravel\I18n\Support\PendingResourceRegistrationCollection;
 
 class Router
@@ -17,25 +16,11 @@ class Router
     protected $app;
 
     /**
-     * The I18n instance.
-     *
-     * @var \Webnuvola\Laravel\I18n\I18n
-     */
-    protected $i18n;
-
-    /**
      * The app router instance.
      *
      * @var \Illuminate\Routing\Router
      */
     protected $router;
-
-    /**
-     * The url generator instance.
-     *
-     * @var \Webnuvola\Laravel\I18n\Routing\UrlGenerator
-     */
-    protected $url;
 
     /**
      * Create a new Router instance.
@@ -46,34 +31,7 @@ class Router
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->i18n = $app['i18n'];
-        $this->router =  $app['router'];
-        $this->url = $app['url'];
-    }
-
-    /**
-     * Create all the i18n routes and add them to router.
-     *
-     * @param  array|string  $methods
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
-     */
-    protected function addRoute($methods, $uri, $action)
-    {
-        $routes = new RouteCollection;
-
-        foreach ($this->i18n->getRegions() as $region) {
-            $route = $this->router->match(
-                $methods,
-                $this->i18n->translateUri($uri, $region),
-                $action
-            )->setRegion($region);
-
-            $routes->push($route);
-        }
-
-        return $routes;
+        $this->router = $app['router'];
     }
 
     /**
@@ -81,11 +39,11 @@ class Router
      *
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function get($uri, $action)
     {
-        return $this->addRoute('get', $uri, $action);
+        return new PendingRouteRegistration($this->app, 'get', $uri, $action);
     }
 
     /**
@@ -93,11 +51,11 @@ class Router
      *
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function post($uri, $action)
     {
-        return $this->addRoute('post', $uri, $action);
+        return new PendingRouteRegistration($this->app, 'post', $uri, $action);
     }
 
     /**
@@ -105,11 +63,11 @@ class Router
      *
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function put($uri, $action)
     {
-        return $this->addRoute('put', $uri, $action);
+        return new PendingRouteRegistration($this->app, 'put', $uri, $action);
     }
 
     /**
@@ -117,11 +75,11 @@ class Router
      *
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function delete($uri, $action)
     {
-        return $this->addRoute('delete', $uri, $action);
+        return new PendingRouteRegistration($this->app, 'delete', $uri, $action);
     }
 
     /**
@@ -129,11 +87,11 @@ class Router
      *
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function patch($uri, $action)
     {
-        return $this->addRoute('patch', $uri, $action);
+        return new PendingRouteRegistration($this->app, 'patch', $uri, $action);
     }
 
     /**
@@ -141,11 +99,11 @@ class Router
      *
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function options($uri, $action)
     {
-        return $this->addRoute('options', $uri, $action);
+        return new PendingRouteRegistration($this->app, 'options', $uri, $action);
     }
 
     /**
@@ -153,11 +111,11 @@ class Router
      *
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function any($uri, $action = null)
     {
-        return $this->addRoute(IlluminateRouter::$verbs, $uri, $action);
+        return new PendingRouteRegistration($this->app, IlluminateRouter::$verbs, $uri, $action);
     }
 
     /**
@@ -166,11 +124,11 @@ class Router
      * @param  array|string  $methods
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function match($methods, $uri, $action)
     {
-        return $this->addRoute($methods, $uri, $action);
+        return new PendingRouteRegistration($this->app, $methods, $uri, $action);
     }
 
     /**
@@ -179,40 +137,11 @@ class Router
      * @param  string  $name
      * @param  string  $controller
      * @param  array  $options
-     * @return \Webnuvola\Laravel\I18n\Support\PendingResourceRegistrationCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingResourceRegistration
      */
     public function resource($name, $controller, array $options = [])
     {
-        $default = array_merge([
-            'names' => [
-                'index' => 'index',
-                'create' => 'create',
-                'store' => 'store',
-                'show' => 'show',
-                'edit' => 'edit',
-                'update' => 'update',
-                'destroy' => 'destroy',
-            ],
-        ], $options);
-
-        $resourceName = $this->getResourceName($name);
-
-        $resources = new PendingResourceRegistrationCollection;
-
-        foreach ($this->i18n->getRegions() as $region) {
-            $options = $default;
-            $options['names'] = array_map(function ($value) use ($region, $resourceName) {
-                return "{$region}.{$resourceName}.{$value}";
-            }, $options['names']);
-
-            $resources->push($this->router->resource(
-                $this->i18n->translateUri($name, $region),
-                $controller,
-                $options
-            ));
-        }
-
-        return $resources;
+        return new PendingResourceRegistration($this->app, $name, $controller, $options);
     }
 
     /**
@@ -228,38 +157,20 @@ class Router
     }
 
     /**
-     * Extract the name from a resource name.
-     *
-     * @param  string  $name
-     * @return string
-     */
-    protected function getResourceName($name)
-    {
-        $segments = explode('/', $name);
-
-        return end($segments);
-    }
-
-    /**
      * Create a redirect from one URI to another.
      *
      * @param  string  $uri
      * @param  string  $destination
      * @param  int  $status
-     * @return \Webnuvola\Laravel\I18n\Support\RouteCollection
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function redirect($uri, $destination, $status = 301)
     {
-        $routeCollection = $this->any($uri, '\Illuminate\Routing\RedirectController');
-
-        foreach ($routeCollection as $route) {
-            $dest = $this->url->isValidUrl($destination) ?
-                $destination :
-                '/' . ltrim($this->i18n->translateUri($destination, $route->getRegion()), '/');
-
-            $route->defaults('destination', $dest)->defaults('status', $status);
-        }
-
-        return $routeCollection;
+        return (new PendingRouteRegistration(
+            $this->app,
+            IlluminateRouter::$verbs,
+            $uri,
+            '\Illuminate\Routing\RedirectController'
+        ))->redirect($destination, $status);
     }
 }

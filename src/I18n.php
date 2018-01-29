@@ -228,9 +228,10 @@ class I18n
      *
      * @param string $uri
      * @param string|null $region
+     * @param array $options
      * @return string
      */
-    public function translateUri($uri, $region = null)
+    public function translateUri($uri, $region = null, $options = [])
     {
         if ($region) {
             list($language) = $this->getLanguageAndCountry($region);
@@ -240,7 +241,12 @@ class I18n
         }
 
         $uri = strtr($uri, $this->getUriReplacePairs($uri, $language));
-        $prefix = $region !== $this->config['default'] ? "{$region}/" : '';
+
+        if ($options['forceRegionPrefix'] ?? false) {
+            $prefix = "{$region}/";
+        } else {
+            $prefix = $region !== $this->config['default'] ? "{$region}/" : '';
+        }
 
         return $prefix . ltrim($uri, '/');
     }
