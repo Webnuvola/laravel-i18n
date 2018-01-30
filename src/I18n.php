@@ -260,4 +260,26 @@ class I18n
     {
         return !!$this->getRegions();
     }
+
+    /**
+     * Returns available languages for a country.
+     *
+     * @param  string $country
+     * @return array
+     */
+    public function getCountryLanguages($country = null)
+    {
+        $country = $country ?? $this->getCountry();
+        $languages = [];
+
+        foreach ($this->getRegions() as $region) {
+            list($regionLanguage, $regionCountry) = $this->getLanguageAndCountry($region);
+
+            if ($regionCountry === $country) {
+                $languages[] = $regionLanguage;
+            }
+        }
+
+        return $languages;
+    }
 }

@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to `laravel-i18n` will be documented in this file.
 
+## 0.1.8 - 2018-01-30
+* Get available languages for a country with function `getCountryLanguages($country)`
+
 ## 0.1.7 - 2018-01-30
 * `forceRegionPrefix()` works also on resources
 
