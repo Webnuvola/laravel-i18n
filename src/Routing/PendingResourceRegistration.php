@@ -169,6 +169,23 @@ class PendingResourceRegistration
         return $this;
     }
 
+    /**
+     * Force the region prefix.
+     *
+     * @return $this
+     */
+    public function forceRegionPrefix()
+    {
+        $this->forceRegionPrefix = true;
+
+        return $this;
+    }
+
+    /**
+     * Returns default resource names merged with options.
+     *
+     * @return array
+     */
     protected function getNames()
     {
         return array_merge([
@@ -210,8 +227,12 @@ class PendingResourceRegistration
                 return "{$region}.{$name}.{$value}";
             }, $options['names']);
 
+            $uri =$this->i18n->translateUri($name, $region, [
+                'forceRegionPrefix' => $this->forceRegionPrefix,
+            ]);
+
             $this->router->resource(
-                $this->i18n->translateUri($name, $region),
+                $uri,
                 $this->controller,
                 $options
             );
