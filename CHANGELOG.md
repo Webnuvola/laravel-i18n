@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to `laravel-i18n` will be documented in this file.
 
+## 0.1.9 - 2018-03-21
+* Laravel 5.6 support
+* Get available regions for the country with function `getRegionsByCountry($country)`
+
 ## 0.1.8 - 2018-01-30
 * Get available languages for a country with function `getCountryLanguages($country)`
 
