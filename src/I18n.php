@@ -189,6 +189,19 @@ class I18n
     }
 
     /**
+     * Returns available regions for the country.
+     *
+     * @param  string $country
+     * @return \Illuminate\Support\Collection
+     */
+    public function getRegionsByCountry($country)
+    {
+        return collect($this->getRegions())->filter(function ($region) use ($country) {
+            return str_is("*-{$country}", $region);
+        });
+    }
+
+    /**
      * Returns the default region.
      *
      * @todo Specify in config file if regionUriPath must be empty in default region
