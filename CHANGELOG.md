@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to `laravel-i18n` will be documented in this file.
 
+## 0.1.10 - 2018-06-07
+* Add support for `signedRoute` and `temporarySignedRoute`
+
 ## 0.1.9 - 2018-03-21
 * Laravel 5.6 support
 * Get available regions for the country with function `getRegionsByCountry($country)`
