@@ -62,7 +62,6 @@ class PendingResourceRegistration
      * @param  string  $name
      * @param  string  $controller
      * @param  array  $options
-     * @return $this
      */
     public function __construct(Application $app, $name, $controller, array $options = [])
     {
@@ -72,8 +71,6 @@ class PendingResourceRegistration
         $this->name = $name;
         $this->controller = $controller;
         $this->options = $options;
-
-        return $this;
     }
 
     /**

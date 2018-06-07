@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to `laravel-i18n` will be documented in this file.
 
+## 0.1.11 - 2018-06-07
+* Add support for `middleware` when declaring routes
+
 ## 0.1.10 - 2018-06-07
 * Add support for `signedRoute` and `temporarySignedRoute`
 

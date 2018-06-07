@@ -77,6 +77,13 @@ class PendingRouteRegistration
     protected $defaults = [];
 
     /**
+     * Route middlewares array.
+     *
+     * @var array
+     */
+    protected $middlewares = [];
+
+    /**
      * Contains the destination url when the route is a redirect.
      *
      * @var string
@@ -104,7 +111,6 @@ class PendingRouteRegistration
      * @param  array|string  $methods
      * @param  string  $uri
      * @param  \Closure|array|string|null  $action
-     * @return $this
      */
     public function __construct(Application $app, $methods, $uri, $action)
     {
@@ -115,8 +121,6 @@ class PendingRouteRegistration
         $this->methods = $methods;
         $this->uri = $uri;
         $this->action = $action;
-
-        return $this;
     }
 
     /**
@@ -167,6 +171,19 @@ class PendingRouteRegistration
     {
         $this->defaults[$key] = $value;
 
+        return $this;
+    }
+
+    /**
+     * Set a middleware for the route.
+     *
+     * @param  mixed  $middleware
+     * @return $this
+     */
+    public function middleware($middleware)
+    {
+        $middleware = is_array($middleware) ? $middleware : func_get_args();
+        $this->middlewares = array_merge($this->middlewares, $middleware);
         return $this;
     }
 
@@ -227,6 +244,7 @@ class PendingRouteRegistration
                 'forceRegionPrefix' => $this->forceRegionPrefix,
             ]);
 
+            /** @var \Illuminate\Routing\Route $route */
             $route = $this->router->match($this->methods, $uri, $this->action)
                 ->setRegion($region);
 
@@ -244,6 +262,10 @@ class PendingRouteRegistration
 
             foreach ($this->defaults as $key => $value) {
                 $route->defaults($key, $value);
+            }
+
+            if ($this->middlewares) {
+                $route->middleware($this->middlewares);
             }
 
             if ($this->redirect) {
