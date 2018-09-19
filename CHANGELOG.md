@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to `laravel-i18n` will be documented in this file.
 
+## 0.1.12 - 2018-09-19
+* You can now check an array of values for blade `ifregion`, `ifnotregion`, `iflanguage`, `ifnotlanguage`, `ifcountry`, `ifnotcountry`
+
 ## 0.1.11 - 2018-06-07
 * Add support for `middleware` when declaring routes
 

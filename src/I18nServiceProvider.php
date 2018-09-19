@@ -2,6 +2,7 @@
 
 namespace Webnuvola\Laravel\I18n;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Webnuvola\Laravel\I18n\Routing\Router;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -138,28 +139,28 @@ class I18nServiceProvider extends ServiceProvider
     protected function registerBladeExtensions()
     {
         $this->app->afterResolving('blade.compiler', function (BladeCompiler $bladeCompiler) {
-            $bladeCompiler->if('ifregion', function ($region) {
-                return $this->app['i18n']->getRegion() === $region;
+            $bladeCompiler->if('ifregion', function ($regions) {
+                return \in_array($this->app['i18n']->getRegion(), Arr::wrap($regions), true);
             });
 
-            $bladeCompiler->if('ifnotregion', function ($region) {
-                return $this->app['i18n']->getRegion() !== $region;
+            $bladeCompiler->if('ifnotregion', function ($regions) {
+                return !\in_array($this->app['i18n']->getRegion(), Arr::wrap($regions), true);
             });
 
-            $bladeCompiler->if('iflanguage', function ($language) {
-                return $this->app['i18n']->getLanguage() === $language;
+            $bladeCompiler->if('iflanguage', function ($languages) {
+                return \in_array($this->app['i18n']->getLanguage(), Arr::wrap($languages), true);
             });
 
-            $bladeCompiler->if('ifnotlanguage', function ($language) {
-                return $this->app['i18n']->getLanguage() !== $language;
+            $bladeCompiler->if('ifnotlanguage', function ($languages) {
+                return !\in_array($this->app['i18n']->getLanguage(), Arr::wrap($languages), true);
             });
 
-            $bladeCompiler->if('ifcountry', function ($country) {
-                return $this->app['i18n']->getCountry() === $country;
+            $bladeCompiler->if('ifcountry', function ($countries) {
+                return \in_array($this->app['i18n']->getCountry(), Arr::wrap($countries), true);
             });
 
-            $bladeCompiler->if('ifnotcountry', function ($country) {
-                return $this->app['i18n']->getCountry() !== $country;
+            $bladeCompiler->if('ifnotcountry', function ($countries) {
+                return !\in_array($this->app['i18n']->getCountry(), Arr::wrap($countries), true);
             });
         });
     }
