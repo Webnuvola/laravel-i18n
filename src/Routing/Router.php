@@ -38,7 +38,7 @@ class Router
      * Register a new GET route with the router.
      *
      * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param  \Closure|array|string|callable|null  $action
      * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function get($uri, $action)
@@ -50,7 +50,7 @@ class Router
      * Register a new POST route with the router.
      *
      * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param  \Closure|array|string|callable|null  $action
      * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function post($uri, $action)
@@ -62,7 +62,7 @@ class Router
      * Register a new PUT route with the router.
      *
      * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param  \Closure|array|string|callable|null  $action
      * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function put($uri, $action)
@@ -71,22 +71,10 @@ class Router
     }
 
     /**
-     * Register a new DELETE route with the router.
-     *
-     * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
-     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
-     */
-    public function delete($uri, $action)
-    {
-        return new PendingRouteRegistration($this->app, 'delete', $uri, $action);
-    }
-
-    /**
      * Register a new PATCH route with the router.
      *
      * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param  \Closure|array|string|callable|null  $action
      * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function patch($uri, $action)
@@ -95,10 +83,22 @@ class Router
     }
 
     /**
+     * Register a new DELETE route with the router.
+     *
+     * @param  string  $uri
+     * @param  \Closure|array|string|callable|null  $action
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
+     */
+    public function delete($uri, $action)
+    {
+        return new PendingRouteRegistration($this->app, 'delete', $uri, $action);
+    }
+
+    /**
      * Register a new OPTIONS route with the router.
      *
      * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param  \Closure|array|string|callable|null  $action
      * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function options($uri, $action)
@@ -110,7 +110,7 @@ class Router
      * Register a new route responding to all verbs.
      *
      * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param  \Closure|array|string|callable|null  $action
      * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function any($uri, $action = null)
@@ -123,12 +123,26 @@ class Router
      *
      * @param  array|string  $methods
      * @param  string  $uri
-     * @param  \Closure|array|string|null  $action
+     * @param  \Closure|array|string|callable|null  $action
      * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
     public function match($methods, $uri, $action)
     {
         return new PendingRouteRegistration($this->app, $methods, $uri, $action);
+    }
+
+    /**
+     * Register an array of resource controllers.
+     *
+     * @param  array  $resources
+     * @param  array  $options
+     * @return void
+     */
+    public function resources(array $resources, array $options = [])
+    {
+        foreach ($resources as $name => $controller) {
+            $this->resource($name, $controller, $options);
+        }
     }
 
     /**
@@ -164,7 +178,7 @@ class Router
      * @param  int  $status
      * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
      */
-    public function redirect($uri, $destination, $status = 301)
+    public function redirect($uri, $destination, $status = 302)
     {
         return (new PendingRouteRegistration(
             $this->app,
@@ -172,5 +186,17 @@ class Router
             $uri,
             '\Illuminate\Routing\RedirectController'
         ))->redirect($destination, $status);
+    }
+
+    /**
+     * Create a permanent redirect from one URI to another.
+     *
+     * @param  string  $uri
+     * @param  string  $destination
+     * @return \Webnuvola\Laravel\I18n\Routing\PendingRouteRegistration
+     */
+    public function permanentRedirect($uri, $destination)
+    {
+        return $this->redirect($uri, $destination, 301);
     }
 }

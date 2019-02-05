@@ -20,16 +20,17 @@ class UrlGenerator extends IlluminateUrlGenerator
     /**
      * Create a new URL Generator instance.
      *
-     * @param  \Illuminate\Routing\RouteCollection  $routes
-     * @param  \Illuminate\Http\Request  $request
-     * @param \Webnuvola\Laravel\I18n\I18n $i18n
+     * @param  \Illuminate\Routing\RouteCollection $routes
+     * @param  \Illuminate\Http\Request $request
+     * @param  string|nullable $assetRoot
+     * @param  \Webnuvola\Laravel\I18n\I18n $i18n
      * @return void
      */
-    public function __construct(RouteCollection $routes, Request $request, I18n $i18n)
+    public function __construct(RouteCollection $routes, Request $request, $assetRoot = null, I18n $i18n)
     {
         $this->i18n = $i18n;
 
-        parent::__construct($routes, $request);
+        parent::__construct($routes, $request, $assetRoot);
     }
 
     /**
@@ -71,7 +72,7 @@ class UrlGenerator extends IlluminateUrlGenerator
     /**
      * Get the URL to a controller action.
      *
-     * @param  string  $action
+     * @param  string|array  $action
      * @param  mixed   $parameters
      * @param  bool    $absolute
      * @return string
