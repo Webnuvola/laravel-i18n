@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to `laravel-i18n` will be documented in this file.
 
+## 0.1.14 - 2019-02-05
+* Laravel 5.8 support
+* Dropped support for Laravel 5.7 and before
+
 ## 0.1.13 - 2019-02-05
 * Laravel 5.7 support
 
