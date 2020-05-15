@@ -1,45 +1,52 @@
 {
-    "name": "webnuvola/laravel-i18n",
-    "description": "Laravel internationalization package",
-    "keywords": [
-        "laravel",
-        "i18n",
-        "php",
-        "translation",
-        "internationalization",
-        "localization"
-    ],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Fabio Cagliero",
-            "email": "caglierofabio@gmail.com"
-        }
-    ],
-    "require": {
-        "illuminate/contracts": "5.8.*",
-        "illuminate/routing": "5.8.*",
-        "illuminate/support": "5.8.*",
-        "illuminate/translation": "5.8.*",
-        "illuminate/view": "5.8.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Webnuvola\\Laravel\\I18n\\": "src"
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Webnuvola\\Laravel\\I18n\\I18nServiceProvider"
-            ],
-            "aliases": {
-                "I18n": "Webnuvola\\Laravel\\I18n\\Facades\\I18n",
-                "I18nRoute": "Webnuvola\\Laravel\\I18n\\Facades\\I18nRoute"
-            }
-        }
+  "name": "webnuvola/laravel-i18n",
+  "description": "Laravel internationalization package",
+  "keywords": [
+    "laravel", "i18n", "php",
+    "translation", "internationalization", "localization"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fabio Cagliero",
+      "email": "fabio@webnuvola.com"
     }
+  ],
+  "require": {
+    "php": "^7.2.5",
+    "laravel/framework": "^6.0|^7.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^5.2",
+    "phpunit/phpunit": "^8.0|^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Webnuvola\\Laravel\\I18n\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Webnuvola\\Laravel\\I18n\\Test\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Webnuvola\\Laravel\\I18n\\I18nServiceProvider"
+      ],
+      "aliases": {
+        "I18n": "Webnuvola\\Laravel\\I18n\\Facades\\I18n",
+        "I18nRoute": "Webnuvola\\Laravel\\I18n\\Facades\\I18nRoute"
+      }
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

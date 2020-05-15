@@ -2,297 +2,197 @@
 
 namespace Webnuvola\Laravel\I18n;
 
-use InvalidArgumentException;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Str;
+use Webnuvola\Laravel\I18n\Exceptions\MissingConfigurationException;
+use Webnuvola\Laravel\I18n\Exceptions\RegionNotValidException;
 
 class I18n
 {
     /**
-     * The application implementation.
+     * Laravel application instance.
      *
      * @var \Illuminate\Contracts\Foundation\Application
      */
-    protected $app;
+    protected $application;
 
     /**
-     * The i18n configuration.
+     * I18n config.
      *
      * @var array
      */
     protected $config;
 
     /**
-     * The translator instance.
-     *
-     * @var \Illuminate\Translation\Translator
-     */
-    protected $translator;
-
-    /**
-     * Current request language.
+     * Current region.
      *
      * @var string
      */
-    protected $currentLanguage;
+    protected $region;
 
     /**
-     * Current requst country.
+     * Current country.
      *
      * @var string
      */
-    protected $currentCountry;
+    protected $country;
 
     /**
-     * Create a new i18n instance.
+     * Current language.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
+     * @var string
      */
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-        $this->config = $app['config']->get('i18n');
-        $this->translator = $app['translator'];
-    }
+    protected $language;
 
     /**
-     * Initialize i18n.
+     * I18n constructor.
      *
-     * @return void
+     * @param  \Illuminate\Contracts\Foundation\Application $application
+     *
+     * @throws \Webnuvola\Laravel\I18n\Exceptions\MissingConfigurationException
      */
-    public function init()
+    public function __construct(Application $application)
     {
-        if ($this->isConfigured()) {
-            $this->setCurrentLanguageAndCountryFromRequest();
-        }
-    }
+        $this->application = $application;
+        $this->config = $application['config']['i18n'];
 
-    /**
-     * Returns language and country from a region string.
-     *
-     * @param string $region
-     * @return array
-     */
-    protected function getLanguageAndCountry($region)
-    {
-        return explode('-', $region, 2);
-    }
-
-    /**
-     * Set language and country from the current request.
-     *
-     * @return void
-     */
-    protected function setCurrentLanguageAndCountryFromRequest()
-    {
-        if (!empty($this->currentLanguage) && !empty($this->currentCountry)) {
-            return;
+        if (! $this->getRegions()) {
+            throw new MissingConfigurationException('I18n must be configured before use');
         }
 
-        $region = $this->app['request']->segment(1);
-        $region = in_array($region, $this->getRegions(), true) ? $region : $this->getDefaultRegion();
-
-        list($this->currentLanguage, $this->currentCountry) = $this->getLanguageAndCountry($region);
-
-        $this->setAppLocale();
+        $this->setRegionFromRequest();
     }
 
     /**
-     * Set language and country.
-     *
-     * @param  string $region
-     * @return void
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function setCurrentLanguageAndCountry($region)
-    {
-        if (!in_array($region, $this->getRegions(), true)) {
-            throw new InvalidArgumentException("Region \"{$region}\" is not valid; check your configuration i18n.php file");
-        }
-
-        list($this->currentLanguage, $this->currentCountry) = $this->getLanguageAndCountry($region);
-
-        $this->setAppLocale();
-    }
-
-    /**
-     * Set application locale.
-     *
-     * @return void
-     */
-    protected function setAppLocale()
-    {
-        $this->app->setLocale($this->getLanguage());
-    }
-
-    /**
-     * Returns current language.
+     * Return region.
      *
      * @return string
      */
-    public function getLanguage()
+    public function getRegion(): string
     {
-        return $this->currentLanguage;
+        return $this->region;
     }
 
     /**
-     * Returns current country.
+     * Return language.
      *
      * @return string
      */
-    public function getCountry()
+    public function getLanguage(): string
     {
-        return $this->currentCountry;
+        return $this->language;
     }
 
     /**
-     * Returns current region.
+     * Return country.
      *
      * @return string
      */
-    public function getRegion()
+    public function getCountry(): string
     {
-        return "{$this->getLanguage()}-{$this->getCountry()}";
+        return $this->country;
     }
 
     /**
-     * Set the current language and country from region.
-     *
-     * @param string $region
-     */
-    public function setRegion($region)
-    {
-        $this->setCurrentLanguageAndCountry($region);
-    }
-
-    /**
-     * Returns current region uri path.
-     *
-     * @return string
-     */
-    public function getRegionUriPath()
-    {
-        $region = $this->getRegion();
-
-        return $region !== $this->config['default'] ? $region : '';
-    }
-
-    /**
-     * Returns all available regions.
+     * Return all available regions.
      *
      * @return array
      */
-    public function getRegions()
+    public function getRegions(): array
     {
         return $this->config['regions'] ?? [];
     }
 
     /**
-     * Returns available regions for the country.
+     * Return all available regions for a country.
      *
      * @param  string $country
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function getRegionsByCountry($country)
+    public function getRegionsByCountry(string $country): array
     {
-        return collect($this->getRegions())->filter(function ($region) use ($country) {
-            return str_is("*-{$country}", $region);
-        });
+        return array_values(array_filter($this->getRegions(), static function ($region) use ($country) {
+            return Str::is("*-{$country}", $region);
+        }));
     }
 
     /**
-     * Returns the default region.
+     * Return all available languages for a country.
      *
-     * @todo Specify in config file if regionUriPath must be empty in default region
+     * @param  string $country
+     * @return array
+     */
+    public function getLanguagesByCountry(string $country): array
+    {
+        return array_map(static function ($region) {
+            [$language,] = explode('-', $region);
+            return $language;
+        }, $this->getRegionsByCountry($country));
+    }
+
+    /**
+     * Return the default region.
      *
      * @return string
      */
-    public function getDefaultRegion()
+    public function getDefaultRegion(): string
     {
         return $this->config['default'] ?? $this->getRegions()[0];
     }
 
     /**
-     * Returns an array
+     * Set the current language and country from region.
      *
-     * @param string $uri
-     * @param string $language
-     * @return array
+     * @param  string $region
+     * @return void
+     *
+     * @throws \Webnuvola\Laravel\I18n\Exceptions\RegionNotValidException
      */
-    protected function getUriReplacePairs($uri, $language)
+    public function setRegion(string $region): void
     {
-        preg_match_all('/\[([\w\-\.]+?)\]/', $uri, $matches);
-
-        $matches = $matches[1] ?? [];
-        $replacePairs = [];
-
-        foreach ($matches as $key) {
-            if ($this->translator->has($key, $language, false)) {
-                $replacePairs["[{$key}]"] = $this->translator->trans($key, [], $language);
-            }
+        if (! in_array($region, $this->getRegions(), true)) {
+            throw new RegionNotValidException(sprintf('Region %s is not valid, update your i18n config file', $region));
         }
 
-        return $replacePairs;
+        [$language, $country] = explode('-', $region);
+
+        $this->region = $region;
+        $this->language = $language;
+        $this->country = $country;
+
+        $this->application->setLocale($language);
     }
 
     /**
-     * Translates an uri.
+     * Set current region from the request.
      *
-     * @param string $uri
-     * @param string|null $region
-     * @param array $options
-     * @return string
+     * @return void
      */
-    public function translateUri($uri, $region = null, $options = [])
+    public function setRegionFromRequest(): void
     {
-        if ($region) {
-            list($language) = $this->getLanguageAndCountry($region);
-        } else {
-            $region = $this->getRegion();
-            $language = $this->getLanguage();
+        if (! $region = request()->segment(1)) {
+            $this->setRegionFromDefault();
+            return;
         }
 
-        $uri = strtr($uri, $this->getUriReplacePairs($uri, $language));
-
-        if ($options['forceRegionPrefix'] ?? false) {
-            $prefix = "{$region}/";
-        } else {
-            $prefix = $region !== $this->config['default'] ? "{$region}/" : '';
+        try {
+            $this->setRegion($region);
+        } catch (RegionNotValidException $e) {
+            $this->setRegionFromDefault();
         }
-
-        return $prefix . ltrim($uri, '/');
     }
 
     /**
-     * Returns true if the configuration file has at least 1 region.
+     * Set current region from the default one.
      *
-     * @return bool
+     * @return void
      */
-    public function isConfigured()
+    public function setRegionFromDefault(): void
     {
-        return !!$this->getRegions();
-    }
-
-    /**
-     * Returns available languages for a country.
-     *
-     * @param  string $country
-     * @return array
-     */
-    public function getCountryLanguages($country = null)
-    {
-        $country = $country ?? $this->getCountry();
-        $languages = [];
-
-        foreach ($this->getRegions() as $region) {
-            list($regionLanguage, $regionCountry) = $this->getLanguageAndCountry($region);
-
-            if ($regionCountry === $country) {
-                $languages[] = $regionLanguage;
-            }
+        try {
+            $this->setRegion($this->getDefaultRegion());
+        } catch (RegionNotValidException $e) {
+            //
         }
-
-        return $languages;
     }
 }

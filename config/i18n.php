@@ -23,9 +23,9 @@ return [
     | Default region
     |--------------------------------------------------------------------------
     |
-    | The default region will be accessible without any prefix to uris.
-    | Set this value to a region (e.g. en-us) or to null to disable
-    | the behaviour.
+    | The default region that will be assigned if running from console or current
+    | route is not i18n. If null, the first element of regions will be used
+    | as default.
     |
     */
 
