@@ -43,7 +43,8 @@
       ],
       "aliases": {
         "I18n": "Webnuvola\\Laravel\\I18n\\Facades\\I18n",
-        "I18nRoutes": "Webnuvola\\Laravel\\I18n\\Facades\\I18nRoutes"
+        "I18nRoutes": "Webnuvola\\Laravel\\I18n\\Facades\\I18nRoutes",
+        "I18nUrl": "Webnuvola\\Laravel\\I18n\\Facades\\I18nUrl"
       }
     }
   },

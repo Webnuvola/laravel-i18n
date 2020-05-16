@@ -1,6 +1,19 @@
 <?php
 
-use Illuminate\Routing\UrlGenerator;
+if (! function_exists('i18n_url')) {
+    /**
+     * Generate a i18n url for the application.
+     *
+     * @param  string $path
+     * @param  mixed $parameters
+     * @param  bool|null $secure
+     * @return string
+     */
+    function i18n_url(string $path, $parameters = [], $secure = null)
+    {
+        return app('i18n.url')->to($path, $parameters, $secure);
+    }
+}
 
 if (! function_exists('i18n_route')) {
     /**
@@ -13,29 +26,26 @@ if (! function_exists('i18n_route')) {
      */
     function i18n_route(string $name, $parameters = [], $absolute = true)
     {
-        $i18nName = app('i18n')->getRegion().".{$name}";
-
-        if (app('router')->has($i18nName)) {
-            return app(UrlGenerator::class)->route($i18nName, $parameters, $absolute);
-        }
-
-        return app(UrlGenerator::class)->route($name, $parameters, $absolute);
+        return app('i18n.url')->route($name, $parameters, $absolute);
     }
 }
 
-if (! function_exists('i18n_url')) {
+if (! function_exists('i18n_redirect')) {
     /**
-     * Generate a i18n url for the application.
+     * Get an instance of the i18n redirector.
      *
-     * @param  string $path
-     * @param  mixed $parameters
+     * @param  string|null $to
+     * @param  int $status
+     * @param  array $headers
      * @param  bool|null $secure
-     * @return string
+     * @return \Webnuvola\Laravel\I18n\I18nRedirector|\Illuminate\Http\RedirectResponse
      */
-    function i18n_url(string $path, $parameters = [], $secure = null)
+    function i18n_redirect($to = null, $status = 302, $headers = [], $secure = null)
     {
-        $path = app('i18n')->getRegion().'/'.ltrim($path, '/');
+        if (is_null($to)) {
+            return app('i18n.redirect');
+        }
 
-        return app(UrlGenerator::class)->to($path, $parameters, $secure);
+        return app('i18n.redirect')->to($to, $status, $headers, $secure);
     }
 }

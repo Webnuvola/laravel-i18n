@@ -12,6 +12,7 @@ class I18nServiceProvider extends ServiceProvider
 {
     /**
      * I18n config file path.
+     *
      * @var string
      */
     protected $configFile = __DIR__.'/../config/i18n.php';
@@ -20,6 +21,8 @@ class I18nServiceProvider extends ServiceProvider
      * Bootstrap the application services.
      *
      * @return void
+     *
+     * @throws
      */
     public function boot(): void
     {
@@ -39,8 +42,15 @@ class I18nServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom($this->configFile, 'i18n');
 
-        $this->app->singleton('i18n', I18n::class);
-        $this->app->bind('i18n.routes', I18nRoutes::class);
+        $this->app->singleton(I18n::class);
+        $this->app->singleton(I18nRoutes::class);
+        $this->app->singleton(I18nUrlGenerator::class);
+        $this->app->singleton(I18nRedirector::class);
+
+        $this->app->alias(I18n::class, 'i18n');
+        $this->app->alias(I18nRoutes::class, 'i18n.routes');
+        $this->app->alias(I18nUrlGenerator::class, 'i18n.url');
+        $this->app->alias(I18nRedirector::class, 'i18n.redirect');
 
         $this->registerBladeExtensions();
     }
