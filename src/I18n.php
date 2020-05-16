@@ -126,6 +126,7 @@ class I18n
     {
         return array_map(static function ($region) {
             [$language,] = explode('-', $region);
+
             return $language;
         }, $this->getRegionsByCountry($country));
     }
@@ -150,7 +151,7 @@ class I18n
      */
     public function setRegion(string $region): void
     {
-        if (! in_array($region, $this->getRegions(), true)) {
+        if (! $this->isValidRegion($region)) {
             throw new RegionNotValidException(sprintf('Region %s is not valid, update your i18n config file', $region));
         }
 
@@ -172,6 +173,7 @@ class I18n
     {
         if (! $region = request()->segment(1)) {
             $this->setRegionFromDefault();
+
             return;
         }
 
@@ -194,5 +196,16 @@ class I18n
         } catch (RegionNotValidException $e) {
             //
         }
+    }
+
+    /**
+     * Return true if region is valid.
+     *
+     * @param  string $region
+     * @return bool
+     */
+    public function isValidRegion(string $region): bool
+    {
+        return in_array($region, $this->getRegions(), true);
     }
 }

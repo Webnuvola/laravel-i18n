@@ -2,9 +2,11 @@
 
 namespace Webnuvola\Laravel\I18n;
 
+use Illuminate\Routing\Route as IlluminateRoute;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
+use Webnuvola\Laravel\I18n\Mixins\RouteMixin;
 
 class I18nServiceProvider extends ServiceProvider
 {
@@ -12,7 +14,7 @@ class I18nServiceProvider extends ServiceProvider
      * I18n config file path.
      * @var string
      */
-    protected $configFile = __DIR__ . '/../config/i18n.php';
+    protected $configFile = __DIR__.'/../config/i18n.php';
 
     /**
      * Bootstrap the application services.
@@ -24,6 +26,8 @@ class I18nServiceProvider extends ServiceProvider
         $this->publishes([
             $this->configFile => config_path('i18n.php'),
         ], 'config');
+
+        IlluminateRoute::mixin(new RouteMixin);
     }
 
     /**
@@ -33,9 +37,10 @@ class I18nServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('i18n', I18n::class);
-
         $this->mergeConfigFrom($this->configFile, 'i18n');
+
+        $this->app->singleton('i18n', I18n::class);
+        $this->app->bind('i18n.routes', I18nRoutes::class);
 
         $this->registerBladeExtensions();
     }

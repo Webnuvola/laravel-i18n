@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void setRegion(string $region)
  * @method static void setRegionFromRequest()
  * @method static void setRegionFromDefault()
+ * @method static bool isValidRegion(string $region)
  *
  * @see \Webnuvola\Laravel\I18n\I18n
  */
