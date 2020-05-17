@@ -59,8 +59,6 @@ class I18n
         if (! $this->getRegions()) {
             throw new MissingConfigurationException('I18n must be configured before use');
         }
-
-        $this->setRegionFromRequest();
     }
 
     /**

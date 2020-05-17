@@ -31,6 +31,8 @@ class I18nServiceProvider extends ServiceProvider
         ], 'config');
 
         IlluminateRoute::mixin(new RouteMixin);
+
+        $this->app['i18n']->setRegionFromRequest();
     }
 
     /**
