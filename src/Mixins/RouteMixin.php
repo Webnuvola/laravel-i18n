@@ -2,14 +2,17 @@
 
 namespace Webnuvola\Laravel\I18n\Mixins;
 
+use Closure;
 use Illuminate\Support\Arr;
 
 class RouteMixin
 {
     /**
      * Get route region.
+     *
+     * @return Closure
      */
-    public function getRegion()
+    public function getRegion(): Closure
     {
         return function () {
             $segments = explode('/', $this->uri());

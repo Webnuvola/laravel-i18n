@@ -6,4 +6,5 @@ use Exception;
 
 class I18nException extends Exception
 {
+    //
 }

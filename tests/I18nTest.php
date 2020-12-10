@@ -98,6 +98,9 @@ final class I18nTest extends TestCase
         }
     }
 
+    /**
+     * @testdox Set region from request with no i18n route
+     */
     public function testSetRegionFromRequestWithNoI18nRoute()
     {
         app()->extend(\Illuminate\Http\Request::class, static function () {
@@ -108,6 +111,9 @@ final class I18nTest extends TestCase
         $this->assertEquals('it-it', $this->i18n->getRegion());
     }
 
+    /**
+     * @testdox I18n must be configured
+     */
     public function testI18nMustBeConfigured()
     {
         $this->expectException(MissingConfigurationException::class);

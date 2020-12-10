@@ -10,39 +10,32 @@ use Webnuvola\Laravel\I18n\Exceptions\RegionNotValidException;
 class I18n
 {
     /**
-     * Laravel application instance.
-     *
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
-    protected $application;
-
-    /**
      * I18n config.
      *
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
      * Current region.
      *
      * @var string
      */
-    protected $region;
+    protected string $region;
 
     /**
      * Current country.
      *
      * @var string
      */
-    protected $country;
+    protected string $country;
 
     /**
      * Current language.
      *
      * @var string
      */
-    protected $language;
+    protected string $language;
 
     /**
      * I18n constructor.
@@ -51,9 +44,9 @@ class I18n
      *
      * @throws \Webnuvola\Laravel\I18n\Exceptions\MissingConfigurationException
      */
-    public function __construct(Application $application)
-    {
-        $this->application = $application;
+    public function __construct(
+        protected Application $application,
+    ) {
         $this->config = $application['config']['i18n'];
 
         if (! $this->getRegions()) {
@@ -177,7 +170,7 @@ class I18n
 
         try {
             $this->setRegion($region);
-        } catch (RegionNotValidException $e) {
+        } catch (RegionNotValidException) {
             $this->setRegionFromDefault();
         }
     }
@@ -191,7 +184,7 @@ class I18n
     {
         try {
             $this->setRegion($this->getDefaultRegion());
-        } catch (RegionNotValidException $e) {
+        } catch (RegionNotValidException) {
             //
         }
     }

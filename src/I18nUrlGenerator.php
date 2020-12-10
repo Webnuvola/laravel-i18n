@@ -2,24 +2,19 @@
 
 namespace Webnuvola\Laravel\I18n;
 
+use DateInterval;
+use DateTimeInterface;
+
 class I18nUrlGenerator
 {
-    /**
-     * I18n instance.
-     *
-     * @var \Webnuvola\Laravel\I18n\I18n
-     */
-    protected $i18n;
-
     /**
      * I18nUrlGenerator constructor.
      *
      * @param \Webnuvola\Laravel\I18n\I18n $i18n
      */
-    public function __construct(I18n $i18n)
-    {
-        $this->i18n = $i18n;
-    }
+    public function __construct(
+        protected I18n $i18n,
+    ) {}
 
     /**
      * Generate a i18n url for the application.
@@ -29,7 +24,7 @@ class I18nUrlGenerator
      * @param  bool|null $secure
      * @return string
      */
-    public function to(string $path, $parameters = [], $secure = null): string
+    public function to(string $path, mixed $parameters = [], ?bool $secure = null): string
     {
         $path = rtrim($this->i18n->getRegion().'/'.ltrim($path, '/'), '/');
 
@@ -44,7 +39,7 @@ class I18nUrlGenerator
      * @param  bool $absolute
      * @return string
      */
-    public function route(string $name, $parameters = [], $absolute = true): string
+    public function route(string $name, mixed $parameters = [], bool $absolute = true): string
     {
         return app('url')->route($this->getI18nRouteName($name), $parameters, $absolute);
     }
@@ -53,15 +48,19 @@ class I18nUrlGenerator
      * Create a signed route URL for a named i18n route.
      *
      * @param  string $name
-     * @param  array $parameters
+     * @param  mixed $parameters
      * @param  \DateTimeInterface|\DateInterval|int|null $expiration
      * @param  bool $absolute
      * @return string
      *
      * @throws \InvalidArgumentException
      */
-    public function signedRoute(string $name, $parameters = [], $expiration = null, $absolute = true): string
-    {
+    public function signedRoute(
+        string $name,
+        mixed $parameters = [],
+        DateTimeInterface|DateInterval|int|null $expiration = null,
+        bool $absolute = true,
+    ): string {
         return app('url')->signedRoute($this->getI18nRouteName($name), $parameters, $expiration, $absolute);
     }
 
@@ -70,12 +69,16 @@ class I18nUrlGenerator
      *
      * @param  string $name
      * @param  \DateTimeInterface|\DateInterval|int $expiration
-     * @param  array $parameters
+     * @param  mixed $parameters
      * @param  bool $absolute
      * @return string
      */
-    public function temporarySignedRoute(string $name, $expiration, $parameters = [], $absolute = true): string
-    {
+    public function temporarySignedRoute(
+        string $name,
+        DateTimeInterface|DateInterval|int $expiration,
+        mixed $parameters = [],
+        bool $absolute = true,
+    ): string {
         return $this->signedRoute($name, $parameters, $expiration, $absolute);
     }
 

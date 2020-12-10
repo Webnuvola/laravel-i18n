@@ -2,6 +2,9 @@
 
 namespace Webnuvola\Laravel\I18n;
 
+use DateInterval;
+use DateTimeInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Traits\ForwardsCalls;
 
@@ -10,22 +13,15 @@ class I18nRedirector
     use ForwardsCalls;
 
     /**
-     * @var \Webnuvola\Laravel\I18n\I18nUrlGenerator
-     */
-    protected $i18nGenerator;
-
-    /**
-     * Illuminate Redirector instance.
+     * I18nRedirector constructor.
      *
-     * @var \Illuminate\Routing\Redirector
+     * @param  \Webnuvola\Laravel\I18n\I18nUrlGenerator $i18nUrlGenerator
+     * @param  \Illuminate\Routing\Redirector $redirector
      */
-    protected $redirector;
-
-    public function __construct(I18nUrlGenerator $i18nUrlGenerator, Redirector $redirector)
-    {
-        $this->i18nGenerator = $i18nUrlGenerator;
-        $this->redirector = $redirector;
-    }
+    public function __construct(
+        protected I18nUrlGenerator $i18nUrlGenerator,
+        protected Redirector $redirector,
+    ) {}
 
     /**
      * Create a new redirect response to the i18n "home" route.
@@ -33,9 +29,9 @@ class I18nRedirector
      * @param  int $status
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function home($status = 302)
+    public function home(int $status = 302): RedirectResponse
     {
-        return $this->redirector->to($this->i18nGenerator->route('home'), $status);
+        return $this->redirector->to($this->i18nUrlGenerator->route('home'), $status);
     }
 
     /**
@@ -47,9 +43,9 @@ class I18nRedirector
      * @param  bool|null $secure
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function to($path, $status = 302, $headers = [], $secure = null)
+    public function to(string $path, int $status = 302, array $headers = [], ?bool $secure = null): RedirectResponse
     {
-        return $this->redirector->to($this->i18nGenerator->to($path, [], $secure), $status, $headers);
+        return $this->redirector->to($this->i18nUrlGenerator->to($path, [], $secure), $status, $headers);
     }
 
     /**
@@ -61,9 +57,9 @@ class I18nRedirector
      * @param  array $headers
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function route($route, $parameters = [], $status = 302, $headers = [])
+    public function route(string $route, mixed $parameters = [], int $status = 302, array $headers = []): RedirectResponse
     {
-        return $this->redirector->to($this->i18nGenerator->route($route, $parameters), $status, $headers);
+        return $this->redirector->to($this->i18nUrlGenerator->route($route, $parameters), $status, $headers);
     }
 
     /**
@@ -76,24 +72,34 @@ class I18nRedirector
      * @param  array $headers
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function signedRoute($route, $parameters = [], $expiration = null, $status = 302, $headers = [])
-    {
-        return $this->redirector->to($this->i18nGenerator->signedRoute($route, $parameters, $expiration), $status, $headers);
+    public function signedRoute(
+        string $route,
+        mixed $parameters = [],
+        DateTimeInterface|DateInterval|int|null $expiration = null,
+        int $status = 302,
+        array $headers = [],
+    ): RedirectResponse {
+        return $this->redirector->to($this->i18nUrlGenerator->signedRoute($route, $parameters, $expiration), $status, $headers);
     }
 
     /**
      * Create a new redirect response to a signed named i18n route.
      *
      * @param  string $route
-     * @param  \DateTimeInterface|\DateInterval|int|null $expiration
+     * @param  \DateTimeInterface|\DateInterval|int $expiration
      * @param  mixed $parameters
      * @param  int $status
      * @param  array $headers
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function temporarySignedRoute($route, $expiration, $parameters = [], $status = 302, $headers = [])
-    {
-        return $this->redirector->to($this->i18nGenerator->temporarySignedRoute($route, $expiration, $parameters), $status, $headers);
+    public function temporarySignedRoute(
+        string $route,
+        DateTimeInterface|DateInterval|int $expiration,
+        mixed $parameters = [],
+        int $status = 302,
+        array $headers = [],
+    ): RedirectResponse {
+        return $this->redirector->to($this->i18nUrlGenerator->temporarySignedRoute($route, $expiration, $parameters), $status, $headers);
     }
 
     /**
@@ -101,9 +107,9 @@ class I18nRedirector
      *
      * @return \Webnuvola\Laravel\I18n\I18nUrlGenerator
      */
-    public function getI18nUrlGenerator()
+    public function getI18nUrlGenerator(): I18nUrlGenerator
     {
-        return $this->i18nGenerator;
+        return $this->i18nUrlGenerator;
     }
 
     /**
@@ -113,7 +119,7 @@ class I18nRedirector
      * @param  array $parameters
      * @return mixed
      */
-    public function __call($method, $parameters)
+    public function __call(string $method, array $parameters): mixed
     {
         return $this->forwardCallTo($this->redirector, $method, $parameters);
     }

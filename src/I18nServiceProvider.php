@@ -15,7 +15,7 @@ class I18nServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $configFile = __DIR__.'/../config/i18n.php';
+    protected string $configFile = __DIR__.'/../config/i18n.php';
 
     /**
      * Bootstrap the application services.
