@@ -1,30 +1,14 @@
 # Laravel Internationalization
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/webnuvola/laravel-i18n.svg?style=flat-square)](https://github.com/webnuvola/laravel-i18n)
 
-This package allows you to split your website into multiple regions with route translation support.
-
-**Attention:** until version 1.0.0, this package must be considered unstable. Use it carefully.
-
-* [Installation](#installation)
-* [Configuration](#configuration)
-* [Usage](#usage)
-  * [Route Translation](#route-translation)
-* [Cache](#cache)
-* [Known Issues](#known-issues)
-* [Changelog](#changelog)
-* [Contributing](#contributing)
-  * [Security](#security)
-* [Credits](#credits)
-* [License](#license)
+This package allows you to register i18n routes for your Laravel app.
 
 ## Installation
-This package supports only laravel 5.5 and you can install via composer:
+Install via composer:
 
 ``` bash
 composer require webnuvola/laravel-i18n
 ```
-
-The service provider and the facade `I18nRouter` will automatically get registered.
 
 After the installation, you must publish the config file and set it up to your needs.
 
@@ -33,11 +17,14 @@ php artisan vendor:publish --provider="Webnuvola\Laravel\I18n\I18nServiceProvide
 ```
 
 ## Configuration
-You must configure at least one region before moving to the usage step.
+After publishing, the configuration will be located in `config/i18n.php`.
 
-When published, [the `config/i18n.php` config file](config/i18n.php) contains:
+You must configure at least one region to use this package.
 
+Example configuration:
 ```php
+<?php
+
 return [
 
     /*
@@ -53,7 +40,8 @@ return [
     */
 
     'regions' => [
-        //
+        'en-us',
+        'en-gb',
     ],
 
     /*
@@ -61,9 +49,9 @@ return [
     | Default region
     |--------------------------------------------------------------------------
     |
-    | The default region will be accessible without any prefix to uris.
-    | Set this value to a region (e.g. en-us) or to null to disable
-    | the behaviour.
+    | The default region that will be assigned if running from console or current
+    | route is not i18n. If null, the first element of regions will be used
+    | as default.
     |
     */
 
@@ -73,77 +61,70 @@ return [
 ```
 
 ## Usage
-Open your `routes/web.php` file and replace `Route` with `I18nRoute`.
+Define i18n routes in `routes/web.php`:
 
 ```php
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use Illuminate\Routing\Router;
+use Webnuvola\Laravel\I18n\Facades\I18nRoutes;
 
-I18nRoute::get('/', function () {
-    return view('welcome');
+I18nRoutes::group(static function (Router $router): void {
+    Route::get('/', [HomeController::class, 'show'])->name('home');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 });
-
-I18nRoute::get('test', 'TestController@test');
 ```
+This will register the following routes (with the config file of previous step):
 
-This package will register routes for the regions in the configuration file.
+| Name               | Url            |
+|--------------------|----------------|
+| en-us.home         | /en-us         |
+| en-us.profile.show | /en-us/profile |
+| en-gb.home         | /en-gb         |
+| en-gb.profile.show | /en-gb/profile |
 
-Helper functions like `url()` and `route()` will automatically generate the correct url
-based on the request.
-
-### Route Translation
-This package allows you to translate routes using the Laravel translator service.
-You just need to insert the translation key between square brackets.
-
-For example with this `i18n.php` config file:
+### I18n functions
+To set or get the current region, you can use the following methods:
 
 ```php
-[
-    'regions' => [
-        'en-us',
-        'fr-fr',
-        'it-it',
-    ],
-    
-    'default' => 'en-us',
-]
+use Webnuvola\Laravel\I18n\Facades\I18n;
+
+I18n::setRegion('en-us');
+
+I18n::getRegion(); // en-us
+I18n::getCountry(); // us
+I18n::getLanguage(); // en
 ```
 
-and this `web.php` file:
+### Helper functions
+This package will extend this default Laravel helper functions by adding i18n support:
 
+#### url() -> i18n_url()
 ```php
-I18nRoute::get('[routes.product]/{id}', 'ProductController@show');
-```
-this routes will be generated:
-```text
-/product/{id}
-/fr-fr/produit/{id}
-/it-it/prodotto/{id}
+I18n::setRegion('en-us');
+
+url('page'); // /page
+i18n_url('page'); // /en-us/page
 ```
 
-## Cache
-We strongly recommend to cache routes by running `php artisan route:cache` in your production environment.
-This package adds a layer of complexity everytime routes have to be parsed.
+#### route() -> i18n_route()
+```php
+I18n::setRegion('en-us');
 
-## Known Issues
-* Helper function `action()` does not return the correct url
-* Tests for this package are still missing
+route('profile.show'); // /profile
+i18n_route('profile.show'); // /en-us/profile
 
-## Changelog
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+// If you want a fixed region i18n url
+route('en-gb.profile.show'); // /en-gb/profile
+```
 
-## Contributing
-`CONTRIBUTING` guidelines will be published soon.
+#### redirect() -> i18n_redirect()
+```php
+I18n::setRegion('en-us');
 
-### Security
+redirect('redirect-page'); // /redirect-page
+i18n_redirect('redirect-page'); // /en-us/redirect-page
+```
+
+## Security
 If you discover any security-related issues, please email [fabio@webnuvola.com](mailto:fabio@webnuvola.com) instead of using the issue tracker.
 
 ## Credits
