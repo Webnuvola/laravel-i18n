@@ -19,9 +19,9 @@ final class I18nTest extends TestCase
         $this->i18n = app('i18n');
     }
 
-    public function testHas4Regions()
+    public function testGetRegions()
     {
-        $this->assertCount(4, $this->i18n->getRegions());
+        $this->assertEquals(['it-it', 'en-us', 'es-us', 'en-gb'], $this->i18n->getRegions());
     }
 
     public function testDefaultRegion()
@@ -96,6 +96,16 @@ final class I18nTest extends TestCase
             $this->i18n->setRegionFromRequest();
             $this->assertEquals($region, $this->i18n->getRegion());
         }
+    }
+
+    public function testGetLanguages()
+    {
+        $this->assertEquals(['it', 'en', 'es'], $this->i18n->getLanguages());
+    }
+
+    public function testGetCountries()
+    {
+        $this->assertEquals(['it', 'us', 'gb'], $this->i18n->getCountries());
     }
 
     /**

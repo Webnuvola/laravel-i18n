@@ -102,9 +102,34 @@ class I18n
      */
     public function getRegionsByCountry(string $country): array
     {
-        return array_values(array_filter($this->getRegions(), static function ($region) use ($country) {
-            return Str::is("*-{$country}", $region);
-        }));
+        return collect($this->getRegions())
+            ->filter(static fn (string $region): bool => Str::is("*-{$country}", $region))
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Return the default region.
+     *
+     * @return string
+     */
+    public function getDefaultRegion(): string
+    {
+        return $this->config['default'] ?? $this->getRegions()[0];
+    }
+
+    /**
+     * Return all languages.
+     *
+     * @return array<int, string>
+     */
+    public function getLanguages(): array
+    {
+        return collect($this->getRegions())
+            ->map(static fn (string $region): string => substr($region, 0, 2))
+            ->unique()
+            ->values()
+            ->all();
     }
 
     /**
@@ -123,13 +148,17 @@ class I18n
     }
 
     /**
-     * Return the default region.
+     * Return all countries.
      *
-     * @return string
+     * @return array<int, string>
      */
-    public function getDefaultRegion(): string
+    public function getCountries(): array
     {
-        return $this->config['default'] ?? $this->getRegions()[0];
+        return collect($this->getRegions())
+            ->map(static fn (string $region): string => substr($region, 3))
+            ->unique()
+            ->values()
+            ->all();
     }
 
     /**
