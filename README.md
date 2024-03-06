@@ -1,5 +1,7 @@
 # Laravel Internationalization
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/webnuvola/laravel-i18n.svg?style=flat-square)](https://github.com/webnuvola/laravel-i18n)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/webnuvola/laravel-i18n.svg?style=flat-square)](https://packagist.org/packages/webnuvola/laravel-i18n)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/webnuvola/laravel-i18n/run-tests.yml?branch=main)](https://github.com/webnuvola/laravel-i18n/actions/workflows/run-tests.yml?query=branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/webnuvola/laravel-i18n.svg?style=flat-square)](https://packagist.org/packages/webnuvola/laravel-i18n)
 
 This package allows you to register i18n routes for your Laravel app.
 
