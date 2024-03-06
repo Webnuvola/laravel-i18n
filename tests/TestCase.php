@@ -2,13 +2,16 @@
 
 namespace Webnuvola\Laravel\I18n\Test;
 
-use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 use Webnuvola\Laravel\I18n\I18nServiceProvider;
 
-abstract class TestCase extends OrchestraTestCase
+abstract class TestCase extends BaseTestCase
 {
     /**
-     * @param  \Illuminate\Foundation\Application $app
+     * Define environment setup.
+     *
+     * @param \Illuminate\Foundation\Application $app
+     * @return void
      */
     protected function getEnvironmentSetUp($app)
     {
@@ -17,8 +20,10 @@ abstract class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param  \Illuminate\Foundation\Application $app
-     * @return array
+     * Get package providers.
+     *
+     * @param \Illuminate\Foundation\Application $app
+     * @return array<int, class-string>
      */
     protected function getPackageProviders($app)
     {

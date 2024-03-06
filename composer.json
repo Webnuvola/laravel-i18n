@@ -17,12 +17,12 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "laravel/framework": "^8.75 || ^9.19 || ^10.10"
+        "php": "^8.1",
+        "laravel/framework": "^9.0||^10.0||^11.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.27 || ^7.24 || ^8.15",
-        "phpunit/phpunit": "^9.6.13"
+        "orchestra/testbench": "^7.0||^8.0||^9.0",
+        "pestphp/pest": "^1.0||^2.34"
     },
     "autoload": {
         "files": [
@@ -38,7 +38,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit --testdox"
+        "test": "pest"
     },
     "extra": {
         "laravel": {
@@ -55,7 +55,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

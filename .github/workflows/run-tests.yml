@@ -1,28 +1,32 @@
-name: Tests
+name: Run Tests
 
 on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
       matrix:
-        php: [8.3, 8.2, 8.1, '8.0']
-        laravel: [10.*, 9.*, 8.*]
+        os: [ubuntu-latest]
+        php: [8.1, 8.2, 8.3]
+        laravel: [9.*, 10.*, 11.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 10.*
-            testbench: ^8.15
           - laravel: 9.*
-            testbench: ^7.24
-          - laravel: 8.*
-            testbench: ^6.27
-        exclude:
+            testbench: ^7.40
+            pest: ^1.0
           - laravel: 10.*
-            php: 8.0
+            testbench: ^8.21
+            pest: ^2.0
+          - laravel: 11.*
+            testbench: ^9.0
+            pest: ^2.0
+        exclude:
+          - php: 8.1
+            laravel: 11.*
 
-    name: PHP${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -42,8 +46,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:>=2.62.1" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "pestphp/pest:${{ matrix.pest }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/pest
