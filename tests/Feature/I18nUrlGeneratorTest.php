@@ -88,7 +88,8 @@ test('helper functions', function () {
 
     $i18n->setRegion('it-it');
 
-    expect(i18n_url('/'))->toBe('http://localhost/it-it')
+    expect(i18n_url())->toBeInstanceOf(I18nUrlGenerator::class)
+        ->and(i18n_url('/'))->toBe('http://localhost/it-it')
         ->and(i18n_route('home'))->toBe('http://localhost/it-it')
         ->and(i18n_route('home-redirect'))->toBe('http://localhost');
 });

@@ -2,18 +2,23 @@
 
 use Illuminate\Http\RedirectResponse;
 use Webnuvola\Laravel\I18n\I18nRedirector;
+use Webnuvola\Laravel\I18n\I18nUrlGenerator;
 
 if (! function_exists('i18n_url')) {
     /**
-     * Generate a i18n url for the application.
+     * Generate an i18n URL for the application.
      *
-     * @param  string $path
+     * @param  string|null $path
      * @param  mixed $parameters
      * @param  bool|null $secure
-     * @return string
+     * @return ($path is null ? \Webnuvola\Laravel\I18n\I18nUrlGenerator : string)
      */
-    function i18n_url(string $path, mixed $parameters = [], ?bool $secure = null): string
+    function i18n_url(?string $path = null, mixed $parameters = [], ?bool $secure = null): I18nUrlGenerator|string
     {
+        if ($path === null) {
+            return app(I18nUrlGenerator::class);
+        }
+
         return app('i18n.url')->to($path, $parameters, $secure);
     }
 }
