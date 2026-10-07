@@ -12,15 +12,12 @@ class I18nServiceProvider extends ServiceProvider
 {
     /**
      * I18n config file path.
-     *
-     * @var string
      */
-    protected string $configFile = __DIR__.'/../config/i18n.php';
+    protected string $configFile = __DIR__ . '/../config/i18n.php';
 
     /**
      * Bootstrap the application services.
      *
-     * @return void
      *
      * @throws
      */
@@ -30,15 +27,13 @@ class I18nServiceProvider extends ServiceProvider
             $this->configFile => config_path('i18n.php'),
         ], 'config');
 
-        IlluminateRoute::mixin(new RouteMixin);
+        IlluminateRoute::mixin(new RouteMixin());
 
         $this->app['i18n']->setRegionFromRequest();
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -59,8 +54,6 @@ class I18nServiceProvider extends ServiceProvider
 
     /**
      * Register blade extensions.
-     *
-     * @return void
      */
     protected function registerBladeExtensions(): void
     {

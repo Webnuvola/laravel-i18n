@@ -2,6 +2,7 @@
 
 namespace Webnuvola\Laravel\I18n\Facades;
 
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Webnuvola\Laravel\I18n\I18nUrlGenerator getI18nUrlGenerator()
  * @method static void setSession(\Illuminate\Session\Store $session)
  *
- * @see \Illuminate\Routing\Redirector
+ * @see Redirector
  */
 class I18nRedirect extends Facade
 {

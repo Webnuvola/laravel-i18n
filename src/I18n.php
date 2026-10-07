@@ -11,38 +11,29 @@ class I18n
 {
     /**
      * I18n config.
-     *
-     * @var array
      */
     protected array $config;
 
     /**
      * Current region.
-     *
-     * @var string
      */
     protected string $region;
 
     /**
      * Current country.
-     *
-     * @var string
      */
     protected string $country;
 
     /**
      * Current language.
-     *
-     * @var string
      */
     protected string $language;
 
     /**
      * I18n constructor.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application $application
      *
-     * @throws \Webnuvola\Laravel\I18n\Exceptions\MissingConfigurationException
+     * @throws MissingConfigurationException
      */
     public function __construct(
         protected Application $application,
@@ -56,8 +47,6 @@ class I18n
 
     /**
      * Return region.
-     *
-     * @return string
      */
     public function getRegion(): string
     {
@@ -66,8 +55,6 @@ class I18n
 
     /**
      * Return language.
-     *
-     * @return string
      */
     public function getLanguage(): string
     {
@@ -76,8 +63,6 @@ class I18n
 
     /**
      * Return country.
-     *
-     * @return string
      */
     public function getCountry(): string
     {
@@ -86,8 +71,6 @@ class I18n
 
     /**
      * Return all available regions.
-     *
-     * @return array
      */
     public function getRegions(): array
     {
@@ -96,9 +79,6 @@ class I18n
 
     /**
      * Return all available regions for a country.
-     *
-     * @param  string $country
-     * @return array
      */
     public function getRegionsByCountry(string $country): array
     {
@@ -110,8 +90,6 @@ class I18n
 
     /**
      * Return the default region.
-     *
-     * @return string
      */
     public function getDefaultRegion(): string
     {
@@ -134,14 +112,11 @@ class I18n
 
     /**
      * Return all available languages for a country.
-     *
-     * @param  string $country
-     * @return array
      */
     public function getLanguagesByCountry(string $country): array
     {
         return array_map(static function ($region) {
-            [$language,] = explode('-', $region);
+            [$language] = explode('-', $region);
 
             return $language;
         }, $this->getRegionsByCountry($country));
@@ -164,10 +139,8 @@ class I18n
     /**
      * Set the current language and country from region.
      *
-     * @param  string $region
-     * @return void
      *
-     * @throws \Webnuvola\Laravel\I18n\Exceptions\RegionNotValidException
+     * @throws RegionNotValidException
      */
     public function setRegion(string $region): void
     {
@@ -186,8 +159,6 @@ class I18n
 
     /**
      * Set current region from the request.
-     *
-     * @return void
      */
     public function setRegionFromRequest(): void
     {
@@ -206,8 +177,6 @@ class I18n
 
     /**
      * Set current region from the default one.
-     *
-     * @return void
      */
     public function setRegionFromDefault(): void
     {
@@ -220,9 +189,6 @@ class I18n
 
     /**
      * Return true if region is valid.
-     *
-     * @param  string $region
-     * @return bool
      */
     public function isValidRegion(string $region): bool
     {

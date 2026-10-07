@@ -9,8 +9,6 @@ class RouteMixin
 {
     /**
      * Get route region.
-     *
-     * @return Closure
      */
     public function getRegion(): Closure
     {

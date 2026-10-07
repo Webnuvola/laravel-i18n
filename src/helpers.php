@@ -8,10 +8,7 @@ if (! function_exists('i18n_url')) {
     /**
      * Generate an i18n URL for the application.
      *
-     * @param  string|null $path
-     * @param  mixed $parameters
-     * @param  bool|null $secure
-     * @return ($path is null ? \Webnuvola\Laravel\I18n\I18nUrlGenerator : string)
+     * @return ($path is null ? I18nUrlGenerator : string)
      */
     function i18n_url(?string $path = null, mixed $parameters = [], ?bool $secure = null): I18nUrlGenerator|string
     {
@@ -26,11 +23,6 @@ if (! function_exists('i18n_url')) {
 if (! function_exists('i18n_route')) {
     /**
      * Generate the URL to a named i18n route.
-     *
-     * @param  string $name
-     * @param  mixed $parameters
-     * @param  bool $absolute
-     * @return string
      */
     function i18n_route(string $name, mixed $parameters = [], bool $absolute = true): string
     {
@@ -41,12 +33,6 @@ if (! function_exists('i18n_route')) {
 if (! function_exists('i18n_redirect')) {
     /**
      * Get an instance of the i18n redirector.
-     *
-     * @param  string|null $to
-     * @param  int $status
-     * @param  array $headers
-     * @param  bool|null $secure
-     * @return \Webnuvola\Laravel\I18n\I18nRedirector|\Illuminate\Http\RedirectResponse
      */
     function i18n_redirect(
         ?string $to = null,

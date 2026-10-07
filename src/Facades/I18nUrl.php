@@ -3,6 +3,7 @@
 namespace Webnuvola\Laravel\I18n\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Webnuvola\Laravel\I18n\I18nRoutes;
 
 /**
  * @method static string to(string $path, $extra = [], bool $secure = null)
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string signedRoute(string $name, array $parameters = [], \DateTimeInterface|\DateInterval|int $expiration = null, bool $absolute = true)
  * @method static string temporarySignedRoute(string $name, \DateTimeInterface|\DateInterval|int $expiration, array $parameters = [], bool $absolute = true)
  *
- * @see \Webnuvola\Laravel\I18n\I18nRoutes
+ * @see I18nRoutes
  */
 class I18nUrl extends Facade
 {

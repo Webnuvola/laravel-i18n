@@ -1,5 +1,7 @@
 <?php
 
+use Webnuvola\Laravel\I18n\Test\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,7 +13,7 @@
 |
 */
 
- uses(Webnuvola\Laravel\I18n\Test\TestCase::class)->in('Feature');
+uses(TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------

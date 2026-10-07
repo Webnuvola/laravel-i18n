@@ -9,8 +9,6 @@ class I18nUrlGenerator
 {
     /**
      * I18nUrlGenerator constructor.
-     *
-     * @param \Webnuvola\Laravel\I18n\I18n $i18n
      */
     public function __construct(
         protected I18n $i18n,
@@ -18,26 +16,16 @@ class I18nUrlGenerator
 
     /**
      * Generate a i18n url for the application.
-     *
-     * @param  string $path
-     * @param  mixed $parameters
-     * @param  bool|null $secure
-     * @return string
      */
     public function to(string $path, mixed $parameters = [], ?bool $secure = null): string
     {
-        $path = rtrim($this->i18n->getRegion().'/'.ltrim($path, '/'), '/');
+        $path = rtrim($this->i18n->getRegion() . '/' . ltrim($path, '/'), '/');
 
         return app('url')->to($path, $parameters, $secure);
     }
 
     /**
      * Generate the URL to a named i18n route.
-     *
-     * @param  string $name
-     * @param  mixed $parameters
-     * @param  bool $absolute
-     * @return string
      */
     public function route(string $name, mixed $parameters = [], bool $absolute = true): string
     {
@@ -47,11 +35,6 @@ class I18nUrlGenerator
     /**
      * Create a signed route URL for a named i18n route.
      *
-     * @param  string $name
-     * @param  mixed $parameters
-     * @param  \DateTimeInterface|\DateInterval|int|null $expiration
-     * @param  bool $absolute
-     * @return string
      *
      * @throws \InvalidArgumentException
      */
@@ -66,12 +49,6 @@ class I18nUrlGenerator
 
     /**
      * Create a temporary signed route URL for a named i18n route.
-     *
-     * @param  string $name
-     * @param  \DateTimeInterface|\DateInterval|int $expiration
-     * @param  mixed $parameters
-     * @param  bool $absolute
-     * @return string
      */
     public function temporarySignedRoute(
         string $name,
@@ -84,13 +61,10 @@ class I18nUrlGenerator
 
     /**
      * Return route i18n name.
-     *
-     * @param  string $name
-     * @return string
      */
     protected function getI18nRouteName(string $name): string
     {
-        $i18nName = app('i18n')->getRegion().".{$name}";
+        $i18nName = app('i18n')->getRegion() . ".{$name}";
 
         return app('router')->has($i18nName) ? $i18nName : $name;
     }
