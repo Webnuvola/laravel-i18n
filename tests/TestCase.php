@@ -17,6 +17,7 @@ abstract class TestCase extends BaseTestCase
     {
         $app['config']->set('i18n.regions', ['it-it', 'en-us', 'es-us', 'en-gb']);
         $app['config']->set('i18n.default', 'it-it');
+        $app['config']->set('filesystems.disks.local.serve', false);
     }
 
     /**
